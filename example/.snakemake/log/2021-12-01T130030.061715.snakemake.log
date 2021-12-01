@@ -1,0 +1,91 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job            count    min threads    max threads
+-----------  -------  -------------  -------------
+create_logo        4              1              1
+output             1              1              1
+total              5              1              1
+
+Select jobs to execute...
+
+[Wed Dec  1 13:00:31 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_2_mapped_18.fa
+    output: results/iter_0/original/reads_2_mapped_18.pdf
+    jobid: 16
+    wildcards: dataset_id=reads_2, n=18
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:00:31 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_1_mapped_18.fa
+    output: results/iter_0/original/reads_1_mapped_18.pdf
+    jobid: 8
+    wildcards: dataset_id=reads_1, n=18
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:00:31 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_2_mapped_17.fa
+    output: results/iter_0/original/reads_2_mapped_17.pdf
+    jobid: 10
+    wildcards: dataset_id=reads_2, n=17
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:00:31 2021]
+Error in rule create_logo:
+    jobid: 16
+    output: results/iter_0/original/reads_2_mapped_18.pdf
+    shell:
+        
+        weblogo -S 1.0             -s large             --ticmarks 0.5             --errorbar-gray 0.1             -y bits             --number-fontsize 17             --fontsize 21             --small-fontsize 1             -c classic             --text-font Helvetica             --logo-font Helvetica             --title-font Helvetica             --number-interval 5             --stack-width 12             --resolution 600             --aspect-ratio 5             --format pdf             --fin results/iter_0/original/reads_2_mapped_18.fa             --fout results/iter_0/original/reads_2_mapped_18.pdf
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+
+[Wed Dec  1 13:00:31 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_1_mapped_17.fa
+    output: results/iter_0/original/reads_1_mapped_17.pdf
+    jobid: 1
+    wildcards: dataset_id=reads_1, n=17
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:00:31 2021]
+Error in rule create_logo:
+    jobid: 8
+    output: results/iter_0/original/reads_1_mapped_18.pdf
+    shell:
+        
+        weblogo -S 1.0             -s large             --ticmarks 0.5             --errorbar-gray 0.1             -y bits             --number-fontsize 17             --fontsize 21             --small-fontsize 1             -c classic             --text-font Helvetica             --logo-font Helvetica             --title-font Helvetica             --number-interval 5             --stack-width 12             --resolution 600             --aspect-ratio 5             --format pdf             --fin results/iter_0/original/reads_1_mapped_18.fa             --fout results/iter_0/original/reads_1_mapped_18.pdf
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Wed Dec  1 13:00:31 2021]
+Error in rule create_logo:
+    jobid: 10
+    output: results/iter_0/original/reads_2_mapped_17.pdf
+    shell:
+        
+        weblogo -S 1.0             -s large             --ticmarks 0.5             --errorbar-gray 0.1             -y bits             --number-fontsize 17             --fontsize 21             --small-fontsize 1             -c classic             --text-font Helvetica             --logo-font Helvetica             --title-font Helvetica             --number-interval 5             --stack-width 12             --resolution 600             --aspect-ratio 5             --format pdf             --fin results/iter_0/original/reads_2_mapped_17.fa             --fout results/iter_0/original/reads_2_mapped_17.pdf
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Wed Dec  1 13:00:31 2021]
+Error in rule create_logo:
+    jobid: 1
+    output: results/iter_0/original/reads_1_mapped_17.pdf
+    shell:
+        
+        weblogo -S 1.0             -s large             --ticmarks 0.5             --errorbar-gray 0.1             -y bits             --number-fontsize 17             --fontsize 21             --small-fontsize 1             -c classic             --text-font Helvetica             --logo-font Helvetica             --title-font Helvetica             --number-interval 5             --stack-width 12             --resolution 600             --aspect-ratio 5             --format pdf             --fin results/iter_0/original/reads_1_mapped_17.fa             --fout results/iter_0/original/reads_1_mapped_17.pdf
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /mnt/c/Users/Yulia_Iakovleva/Workdir/Wuppertal/test-pipeline/example/.snakemake/log/2021-12-01T130030.061715.snakemake.log

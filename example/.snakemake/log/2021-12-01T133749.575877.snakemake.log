@@ -1,0 +1,284 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                               count    min threads    max threads
+------------------------------  -------  -------------  -------------
+bowtie_map_raw                        2              4              4
+create_logo                           4              1              1
+extract_fastq_from_bam                4              1              1
+extract_original_fastq                2              1              1
+filer_mapped_bam                      2              1              1
+filter_unmapped_bam                   2              1              1
+output                                1              1              1
+split_original_reads_by_length        4              1              1
+total                                21              1              4
+
+Select jobs to execute...
+
+[Wed Dec  1 13:37:49 2021]
+rule bowtie_map_raw:
+    input: data/reads/reads_2.fq, data/reference/genome.1.ebwt, data/reference/genome.2.ebwt, data/reference/genome.3.ebwt, data/reference/genome.4.ebwt, data/reference/genome.rev.1.ebwt, data/reference/genome.rev.2.ebwt
+    output: results/iter_0/alignments/reads_2.bam
+    jobid: 15
+    wildcards: dataset_id=reads_2
+    threads: 4
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:49 2021]
+Finished job 15.
+1 of 21 steps (5%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:49 2021]
+rule bowtie_map_raw:
+    input: data/reads/reads_1.fq, data/reference/genome.1.ebwt, data/reference/genome.2.ebwt, data/reference/genome.3.ebwt, data/reference/genome.4.ebwt, data/reference/genome.rev.1.ebwt, data/reference/genome.rev.2.ebwt
+    output: results/iter_0/alignments/reads_1.bam
+    jobid: 7
+    wildcards: dataset_id=reads_1
+    threads: 4
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 7.
+2 of 21 steps (10%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule filer_mapped_bam:
+    input: results/iter_0/alignments/reads_1.bam
+    output: results/iter_0/alignments/reads_1_mapped.bam
+    jobid: 6
+    wildcards: dataset_id=reads_1
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule filter_unmapped_bam:
+    input: results/iter_0/alignments/reads_1.bam
+    output: results/iter_0/alignments/reads_1_unmapped.bam
+    jobid: 19
+    wildcards: dataset_id=reads_1
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule filter_unmapped_bam:
+    input: results/iter_0/alignments/reads_2.bam
+    output: results/iter_0/alignments/reads_2_unmapped.bam
+    jobid: 21
+    wildcards: dataset_id=reads_2
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule filer_mapped_bam:
+    input: results/iter_0/alignments/reads_2.bam
+    output: results/iter_0/alignments/reads_2_mapped.bam
+    jobid: 14
+    wildcards: dataset_id=reads_2
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 6.
+3 of 21 steps (14%) done
+[Wed Dec  1 13:37:50 2021]
+Finished job 19.
+4 of 21 steps (19%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule extract_fastq_from_bam:
+    input: results/iter_0/alignments/reads_1_unmapped.bam
+    output: results/iter_0/fastq/reads_1_unmapped.fq
+    jobid: 18
+    wildcards: dataset_id=reads_1, type=unmapped
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule extract_fastq_from_bam:
+    input: results/iter_0/alignments/reads_1_mapped.bam
+    output: results/iter_0/fastq/reads_1_mapped.fq
+    jobid: 4
+    wildcards: dataset_id=reads_1, type=mapped
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 21.
+5 of 21 steps (24%) done
+[Wed Dec  1 13:37:50 2021]
+Finished job 14.
+6 of 21 steps (29%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule extract_fastq_from_bam:
+    input: results/iter_0/alignments/reads_2_unmapped.bam
+    output: results/iter_0/fastq/reads_2_unmapped.fq
+    jobid: 20
+    wildcards: dataset_id=reads_2, type=unmapped
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule extract_fastq_from_bam:
+    input: results/iter_0/alignments/reads_2_mapped.bam
+    output: results/iter_0/fastq/reads_2_mapped.fq
+    jobid: 13
+    wildcards: dataset_id=reads_2, type=mapped
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 18.
+7 of 21 steps (33%) done
+[Wed Dec  1 13:37:50 2021]
+Finished job 4.
+8 of 21 steps (38%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule extract_original_fastq:
+    input: data/reads/reads_1.fq, results/iter_0/fastq/reads_1_mapped.fq
+    output: results/iter_0/original/reads_1_mapped.fq
+    jobid: 3
+    wildcards: dataset_id=reads_1
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 20.
+9 of 21 steps (43%) done
+[Wed Dec  1 13:37:50 2021]
+Finished job 13.
+10 of 21 steps (48%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule extract_original_fastq:
+    input: data/reads/reads_2.fq, results/iter_0/fastq/reads_2_mapped.fq
+    output: results/iter_0/original/reads_2_mapped.fq
+    jobid: 12
+    wildcards: dataset_id=reads_2
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 3.
+11 of 21 steps (52%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule split_original_reads_by_length:
+    input: results/iter_0/original/reads_1_mapped.fq
+    output: results/iter_0/original/reads_1_mapped_18.fa
+    jobid: 9
+    wildcards: dataset_id=reads_1, n=18
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule split_original_reads_by_length:
+    input: results/iter_0/original/reads_1_mapped.fq
+    output: results/iter_0/original/reads_1_mapped_17.fa
+    jobid: 2
+    wildcards: dataset_id=reads_1, n=17
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 12.
+12 of 21 steps (57%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule split_original_reads_by_length:
+    input: results/iter_0/original/reads_2_mapped.fq
+    output: results/iter_0/original/reads_2_mapped_18.fa
+    jobid: 17
+    wildcards: dataset_id=reads_2, n=18
+    resources: tmpdir=/tmp
+
+
+[Wed Dec  1 13:37:50 2021]
+rule split_original_reads_by_length:
+    input: results/iter_0/original/reads_2_mapped.fq
+    output: results/iter_0/original/reads_2_mapped_17.fa
+    jobid: 11
+    wildcards: dataset_id=reads_2, n=17
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 9.
+13 of 21 steps (62%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_1_mapped_18.fa
+    output: results/iter_0/original/reads_1_mapped_18.pdf
+    jobid: 8
+    wildcards: dataset_id=reads_1, n=18
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:50 2021]
+Finished job 2.
+14 of 21 steps (67%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:50 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_1_mapped_17.fa
+    output: results/iter_0/original/reads_1_mapped_17.pdf
+    jobid: 1
+    wildcards: dataset_id=reads_1, n=17
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:51 2021]
+Finished job 17.
+15 of 21 steps (71%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:51 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_2_mapped_18.fa
+    output: results/iter_0/original/reads_2_mapped_18.pdf
+    jobid: 16
+    wildcards: dataset_id=reads_2, n=18
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:51 2021]
+Finished job 11.
+16 of 21 steps (76%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:51 2021]
+rule create_logo:
+    input: results/iter_0/original/reads_2_mapped_17.fa
+    output: results/iter_0/original/reads_2_mapped_17.pdf
+    jobid: 10
+    wildcards: dataset_id=reads_2, n=17
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:51 2021]
+Finished job 8.
+17 of 21 steps (81%) done
+[Wed Dec  1 13:37:51 2021]
+Finished job 1.
+18 of 21 steps (86%) done
+[Wed Dec  1 13:37:51 2021]
+Finished job 16.
+19 of 21 steps (90%) done
+[Wed Dec  1 13:37:51 2021]
+Finished job 10.
+20 of 21 steps (95%) done
+Select jobs to execute...
+
+[Wed Dec  1 13:37:51 2021]
+localrule output:
+    input: results/iter_0/original/reads_1_mapped_17.pdf, results/iter_0/original/reads_1_mapped_18.pdf, results/iter_0/original/reads_2_mapped_17.pdf, results/iter_0/original/reads_2_mapped_18.pdf, results/iter_0/fastq/reads_1_mapped.fq, results/iter_0/fastq/reads_1_unmapped.fq, results/iter_0/fastq/reads_2_mapped.fq, results/iter_0/fastq/reads_2_unmapped.fq
+    jobid: 0
+    resources: tmpdir=/tmp
+
+[Wed Dec  1 13:37:51 2021]
+Finished job 0.
+21 of 21 steps (100%) done
+Complete log: /mnt/c/Users/Yulia_Iakovleva/Workdir/Wuppertal/test-pipeline/example/.snakemake/log/2021-12-01T133749.575877.snakemake.log

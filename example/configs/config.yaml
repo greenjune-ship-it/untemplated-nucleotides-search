@@ -1,0 +1,10 @@
+reference:
+    data/reference/genome.fna
+original_samples:
+    data/reads/
+trimmed_samples:
+    data/reads/
+extraction_size:
+    [17,18]
+output_prefix:
+    iter_0
