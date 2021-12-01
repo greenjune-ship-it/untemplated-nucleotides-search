@@ -79,4 +79,6 @@ snakemake --dag | dot -Tsvg > dag.svg
 snakemake --rulegraph | dot -Tsvg > rulegraph.svg
 ```
 
-<img src="./example/rulegraph.svg">
+<p align="center">
+  <img src="./example/rulegraph.svg">
+</p>
