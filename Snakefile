@@ -39,9 +39,9 @@ rule bowtie_map_raw:
     params:
         index=index_path
     threads:
-        4
+        32
     shell:
-        "bowtie -p{threads} {params.index} {input.reads} -S -n 0 | samtools view - -Sb | samtools sort - -@4 -o {output}"
+        "bowtie -p{threads} {params.index} {input.reads} -S -n 0 | samtools view - -Sb | samtools sort - -@{threads} -o {output}"
 
 rule filer_mapped_bam:
     input:
