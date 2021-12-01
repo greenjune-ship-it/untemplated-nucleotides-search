@@ -14,7 +14,7 @@
 
 ```
 cd example
-snakemake -j --snakefile ../Snakefile
+snakemake -j 4 --snakefile ../Snakefile
 ```
 
 For dry run without execution you can use
@@ -73,12 +73,12 @@ Other folders will appear during the execution of pipeline.
 snakemake --dag | dot -Tsvg > dag.svg
 ```
 
-![Alt text](./example/dag.svg)
+![Alt text]
 <img src="./example/dag.svg">
 
 ```
 snakemake --rulegraph | dot -Tsvg > rulegraph.svg
 ```
 
-![Alt text](./example/rulegraph.svg)
+![Alt text]
 <img src="./example/rulegraph.svg">
