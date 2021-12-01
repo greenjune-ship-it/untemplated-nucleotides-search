@@ -73,12 +73,10 @@ Other folders will appear during the execution of pipeline.
 snakemake --dag | dot -Tsvg > dag.svg
 ```
 
-![Alt text]
 <img src="./example/dag.svg">
 
 ```
 snakemake --rulegraph | dot -Tsvg > rulegraph.svg
 ```
 
-![Alt text]
 <img src="./example/rulegraph.svg">
