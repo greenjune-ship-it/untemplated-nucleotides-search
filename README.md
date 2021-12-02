@@ -77,7 +77,9 @@ snakemake --dag | dot -Tsvg > dag.svg
 ```
 
 <p align="center">
+  <h6>Without trimming</h6>
   <img src="./example/dag_without_trimming.svg">
+  <h6>With trimming</h6>
   <img src="./example/dag_with_trimming.svg">
 </p>
 
