@@ -6,6 +6,7 @@ configfile:
 def get_expected_output(reads_dir):
     return(list(map(lambda file: file.split(".")[0], os.listdir(reads_dir))))
 
+
 def get_bowtie_map_input(include_cutadapt):
     if include_cutadapt:
         return(rules.cut_adapt.output)
