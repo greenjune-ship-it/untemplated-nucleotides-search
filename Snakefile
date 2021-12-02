@@ -6,25 +6,51 @@ configfile:
 def get_expected_output(reads_dir):
     return(list(map(lambda file: file.split(".")[0], os.listdir(reads_dir))))
 
+def get_bowtie_map_input(include_cutadapt):
+    if include_cutadapt:
+        return(rules.cut_adapt.output)
+    else:
+        return(path_to_samples + "{dataset_id}.fq")
+
+
 genome = config["reference"]
 index_path = genome.rsplit(".", maxsplit=1)[0]
 iter_num = config["output_prefix"]
-start, stop = config["extraction_size"][0], config["extraction_size"][1]+1
-reads_prefixes = get_expected_output(config["trimmed_samples"])
+start, stop = config["extraction_size"][0], config["extraction_size"][1] + 1
+samples = get_expected_output(config["trimmed_samples"])
+path_to_samples = config["trimmed_samples"]
+include_cutadapt = config["include_cutadapt"]
+if include_cutadapt:
+    path_to_samples = "results/" + iter_num + "/trimmed_reads/"
 
 rule output:
     input:
-        expand("results/"+iter_num+"/original/{dataset_id}_mapped_{n}.pdf",
-                    dataset_id=reads_prefixes,
-                    n=[i for i in range(start, stop)]),
-        expand("results/"+iter_num+"/fastq/{dataset_id}_{type}.fq", dataset_id=reads_prefixes, type=["mapped", "unmapped"])
+        expand(
+            "results/" + iter_num + "/original/{dataset_id}_mapped_{n}.pdf",
+            dataset_id=samples,
+            n=[i for i in range(start, stop)]
+        ),
+        expand(
+            "results/" + iter_num + "/fastq_from_alignments/{dataset_id}_{type}.fq",
+            dataset_id=samples,
+            type=["mapped", "unmapped"]
+        )
+
+rule cut_adapt:
+    input:
+        config["trimmed_samples"] + "{dataset_id}.fq"
+    output:
+        path_to_samples + "{dataset_id}_trimmed.fq"
+    run:
+        if include_cutadapt:
+            shell("cutadapt --cores=32 -u -1 -o {output} {input}")
 
 rule bowtie_build:
     input:
         genome
     output:
-        expand(index_path+".{index}.ebwt", index=range(1,5)),
-        expand(index_path+".rev.{index}.ebwt", index=range(1,3))
+        expand(index_path + ".{index}.ebwt", index=range(1,5)),
+        expand(index_path + ".rev.{index}.ebwt", index=range(1,3))
     params:
         index=index_path
     shell:
@@ -32,10 +58,10 @@ rule bowtie_build:
 
 rule bowtie_map_raw:
     input:
-        reads=config["trimmed_samples"]+"{dataset_id}.fq",
+        reads=get_bowtie_map_input(include_cutadapt),
         indexes=rules.bowtie_build.output
     output:
-        "results/"+iter_num+"/alignments/{dataset_id}.bam"
+        "results/" + iter_num + "/alignments/{dataset_id}.bam"
     params:
         index=index_path
     threads:
@@ -47,7 +73,7 @@ rule filer_mapped_bam:
     input:
         rules.bowtie_map_raw.output
     output:
-        "results/"+iter_num+"/alignments/{dataset_id}_mapped.bam"
+        "results/" + iter_num + "/alignments/{dataset_id}_mapped.bam"
     shell:
         "samtools view -b -F 4 {input} > {output}"
 
@@ -55,24 +81,24 @@ rule filter_unmapped_bam:
     input:
         rules.bowtie_map_raw.output
     output:
-        "results/"+iter_num+"/alignments/{dataset_id}_unmapped.bam"
+        "results/" + iter_num + "/alignments/{dataset_id}_unmapped.bam"
     shell:
         "samtools view -b -f 4 {input} > {output}"
 
 rule extract_fastq_from_bam:
     input:
-        "results/"+iter_num+"/alignments/{dataset_id}_{type}.bam"
+        "results/" + iter_num + "/alignments/{dataset_id}_{type}.bam"
     output:
-        "results/"+iter_num+"/fastq/{dataset_id}_{type}.fq"
+        "results/" + iter_num + "/fastq_from_alignments/{dataset_id}_{type}.fq"
     shell:
         "samtools fastq {input} > {output}"
 
 rule extract_original_fastq:
     input:
-        original=config["original_samples"]+"{dataset_id}.fq",
-        trimmed="results/"+iter_num+"/fastq/{dataset_id}_mapped.fq"
+        original=config["original_samples"] + "{dataset_id}.fq",
+        trimmed="results/" + iter_num + "/fastq_from_alignments/{dataset_id}_mapped.fq"
     output:
-        "results/"+iter_num+"/original/{dataset_id}_mapped.fq"
+        "results/" + iter_num + "/original/{dataset_id}_mapped.fq"
     shell:
         "seqtk subseq {input.original} <(awk 'NR % 4 == 1' {input.trimmed} | sed 's/@//') > {output}"
 
@@ -80,7 +106,7 @@ rule split_original_reads_by_length:
     input:
         rules.extract_original_fastq.output
     output:
-        "results/"+iter_num+"/original/{dataset_id}_mapped_{n}.fa"
+        "results/" + iter_num + "/original/{dataset_id}_mapped_{n}.fa"
     shell:
         "reformat.sh in={input} out={output} minlength={wildcards.n} maxlength={wildcards.n}"
 
@@ -88,7 +114,7 @@ rule create_logo:
     input:
         rules.split_original_reads_by_length.output
     output:
-        "results/"+iter_num+"/original/{dataset_id}_mapped_{n}.pdf"
+        "results/" + iter_num + "/original/{dataset_id}_mapped_{n}.pdf"
     shell:
         """
         weblogo -S 1.0 \

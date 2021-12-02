@@ -8,3 +8,5 @@ extraction_size:
     [17,18]
 output_prefix:
     iter_0
+include_cutadapt:
+    True

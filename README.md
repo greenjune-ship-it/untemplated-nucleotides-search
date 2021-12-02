@@ -1,10 +1,10 @@
 # test-pipeline
 
 ## Requirements
+* cutadapt 2.8 with Python 3.8.10
 * bowtie 1.2.3
 * samtools 1.10
 * graphviz 2.43.0
-* cutadapt 2.8 with Python 3.8.10
 * seqtk 1.3
 * BBMap and default-jre
 * GPL Ghostscript 9.50
@@ -14,16 +14,16 @@
 
 ```
 cd example
-snakemake -j 4 --snakefile ../Snakefile
+snakemake -j 32 --snakefile ../Snakefile
 ```
 
 For dry run without execution you can use
 ```
-snakemake -j 4 --dry-run
+snakemake -j 32 --dry-run ../Snakefile
 ```
 
-## General recommendation about running the pipeline on you own dataset
-I recommend you to keep the following directories stucture
+## General recommendations
+I recommend you to keep the following directories structure
 ```
 |-analysis_name
   |
@@ -40,19 +40,19 @@ I recommend you to keep the following directories stucture
     |
     |--iter_0
     |  |
+    |  |-trimmed_reads
     |  |-alignments
-    |  |-fastq
+    |  |-fastq_from_alignments
     |  |-original
     |
     |--iter_1
     |--iter_n
 ```
 
-FoFolders ```data/reference``` and ```data/reads``` should be preexisting and specified in config file.
-
+Folders ```data/reference``` and ```data/reads``` should be preexisting and specified in config file.
 
 ### Required files
-```configs/config.yaml``` must containg all necessary information about pipeline parameters (see example/configs/congig.yaml) 
+```configs/config.yaml``` must containg all necessary information about pipeline parameters (see *example/configs/config.yaml*) 
 
 ```data/reference``` must contain reference genome in fasta format
 
@@ -61,6 +61,9 @@ FoFolders ```data/reference``` and ```data/reads``` should be preexisting and sp
 Other folders will appear during the execution of pipeline.
 
 ### Outputs
+
+```results/iter_*/trimmed_reads``` contains reads with 1 cuted base from 3' end
+
 ```results/iter_*/alignments``` contains all mapped results, including mapped and unmapped alignments in bam format
 
 ```results/iter_*/fastq``` contains fastq files extracted from bam
@@ -74,7 +77,8 @@ snakemake --dag | dot -Tsvg > dag.svg
 ```
 
 <p align="center">
-  <img src="./example/dag.svg">
+  <img src="./example/dag_without_trimming.svg">
+  <img src="./example/dag_with_trimming.svg">
 </p>
 
 ```
@@ -82,5 +86,6 @@ snakemake --rulegraph | dot -Tsvg > rulegraph.svg
 ```
 
 <p align="center">
-  <img src="./example/rulegraph.svg">
+  <img src="./example/rulegraph_without_trimming.svg">
+  <img src="./example/rulegraph_with_trimming.svg">
 </p>
