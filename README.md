@@ -42,8 +42,17 @@ I recommend you to keep the following directories structure
     |  |
     |  |-trimmed_reads
     |  |-alignments
+    |  | |
+    |  | |-mapped
+    |  | |-unmapped
+    |  | 
     |  |-fastq_from_alignments
+    |  | |-mapped
+    |  | |-unmapped
+    |  | 
     |  |-original
+    |    |
+    |    |-mapped
     |
     |--iter_1
     |--iter_n

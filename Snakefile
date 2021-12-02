@@ -1,7 +1,7 @@
 import os
 
 configfile:
-    "configs/config.yaml"
+    "config/config.yaml"
 
 def get_expected_output(reads_dir):
     return(list(map(lambda file: file.split(".")[0], os.listdir(reads_dir))))
@@ -27,14 +27,15 @@ if include_cutadapt:
 rule output:
     input:
         expand(
-            "results/" + iter_num + "/original/{dataset_id}_mapped_{n}.pdf",
+            "results/" + iter_num + "/original/mapped/{dataset_id}_{n}.pdf",
             dataset_id=samples,
-            n=[i for i in range(start, stop)]
+            n=[i for i in range(start, stop)],
+            mapping_status=["mapped", "unmapped"]
         ),
         expand(
-            "results/" + iter_num + "/fastq_from_alignments/{dataset_id}_{type}.fq",
+            "results/" + iter_num + "/fastq_from_alignments/{mapping_status}/{dataset_id}.fq",
             dataset_id=samples,
-            type=["mapped", "unmapped"]
+            mapping_status=["mapped", "unmapped"]
         )
 
 rule cut_adapt:
@@ -74,7 +75,7 @@ rule filer_mapped_bam:
     input:
         rules.bowtie_map_raw.output
     output:
-        "results/" + iter_num + "/alignments/{dataset_id}_mapped.bam"
+        "results/" + iter_num + "/alignments/mapped/{dataset_id}.bam"
     shell:
         "samtools view -b -F 4 {input} > {output}"
 
@@ -82,24 +83,24 @@ rule filter_unmapped_bam:
     input:
         rules.bowtie_map_raw.output
     output:
-        "results/" + iter_num + "/alignments/{dataset_id}_unmapped.bam"
+        "results/" + iter_num + "/alignments/unmapped/{dataset_id}.bam"
     shell:
         "samtools view -b -f 4 {input} > {output}"
 
 rule extract_fastq_from_bam:
     input:
-        "results/" + iter_num + "/alignments/{dataset_id}_{type}.bam"
+        "results/" + iter_num + "/alignments/{mapping_status}/{dataset_id}.bam"
     output:
-        "results/" + iter_num + "/fastq_from_alignments/{dataset_id}_{type}.fq"
+        "results/" + iter_num + "/fastq_from_alignments/{mapping_status}/{dataset_id}.fq"
     shell:
         "samtools fastq {input} > {output}"
 
 rule extract_original_fastq:
     input:
         original=config["original_samples"] + "{dataset_id}.fq",
-        trimmed="results/" + iter_num + "/fastq_from_alignments/{dataset_id}_mapped.fq"
+        trimmed="results/" + iter_num + "/fastq_from_alignments/{mapping_status}/{dataset_id}.fq"
     output:
-        "results/" + iter_num + "/original/{dataset_id}_mapped.fq"
+        "results/" + iter_num + "/original/{mapping_status}/{dataset_id}.fq"
     shell:
         "seqtk subseq {input.original} <(awk 'NR % 4 == 1' {input.trimmed} | sed 's/@//') > {output}"
 
@@ -107,7 +108,7 @@ rule split_original_reads_by_length:
     input:
         rules.extract_original_fastq.output
     output:
-        "results/" + iter_num + "/original/{dataset_id}_mapped_{n}.fa"
+        "results/" + iter_num + "/original/{mapping_status}/{dataset_id}_{n}.fa"
     shell:
         "reformat.sh in={input} out={output} minlength={wildcards.n} maxlength={wildcards.n}"
 
@@ -115,7 +116,7 @@ rule create_logo:
     input:
         rules.split_original_reads_by_length.output
     output:
-        "results/" + iter_num + "/original/{dataset_id}_mapped_{n}.pdf"
+        "results/" + iter_num + "/original/{mapping_status}/{dataset_id}_{n}.pdf"
     shell:
         """
         weblogo -S 1.0 \
