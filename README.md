@@ -1,4 +1,6 @@
-# test-pipeline
+# Untemplated nucleotides search
+
+Pipeline for detection of untemplated nucleotides from RNA-seq data
 
 ## Requirements
 * cutadapt 2.8 with Python 3.8.10
